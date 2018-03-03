@@ -1,0 +1,1 @@
+export const TRIGGLE_DIALOG='TRIGGLE_DIALOG'
