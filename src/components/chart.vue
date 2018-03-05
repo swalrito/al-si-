@@ -1,14 +1,15 @@
 <template>
   <div class="chart">
       <!-- 温度曲线 -->
-      <e-charts :options='chartOption1' :initOptions='initOption'></e-charts>
+      <div class="tempChart" ref='tempChart'></div>
       <!-- 微分曲线 -->
-      <e-charts :options='chartOption2' :initOptions='initOption'></e-charts>
+      <div class="dfChart" ref="dfChart"></div>
   </div>
 </template>
 
 <script>
-import ECharts from 'vue-echarts/components/ECharts'
+import {mapState,mapGetters} from 'vuex'
+import echarts from 'echarts'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/toolbox'
@@ -17,116 +18,47 @@ import 'echarts/lib/component/dataZoom'
 export default {
     data:function(){
         return {
-            initOption:{
-                width:1000,
-                height:400,
-            },
-            chartOption1:{
-                title:{
-                    text:'温度曲线',
-                },
-                legend:{
-                    data:['温度'],
-                },
-                toolbox:{
-                    show:true,
-                    feature:{
-                        saveAsImage:{
-                            show:true,
-                        }
-                    }
-                },
-                dataZoom:[{
-                    type:'inside'
-                },{
-                    type:'slider',
-                    show:true,
-                    start:0,
-                    end:100,
-                }],
-                tooltip : {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                }
-                },
-                xAxis:[{
-                    data:[],
-                    type:'value',
-                    name:'时间(s)',
-                }],
-                yAxis:[
-                    {
-                        name:'温度(t)',
-                        type:'value',
-                    }
-                ],
-                series:[{
-                    type:'line',
-                    name:'温度',
-                    data:[],
-                }]
-            },
-            chartOption2:{
-                title:{
-                    text:'微分曲线',
-                },
-                legend:{
-                    data:['微分值'],
-                },
-                toolbox:{
-                    show:true,
-                    feature:{
-                        saveAsImage:{
-                            show:true,
-                        }
-                    }
-                },
-                dataZoom:[{
-                    type:'inside'
-                },{
-                    type:'slider',
-                    show:true,
-                    start:0,
-                    end:100,
-                }],
-                tooltip : {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                }
-                },
-                xAxis:[{
-                    data:[],
-                    type:'value',
-                    name:'时间(s)',
-                }],
-                yAxis:[
-                    {
-                        name:'dT/dt',
-                        type:'value',
-                    }
-                ],
-                series:[{
-                    type:'line',
-                    name:'温度(t)',
-                    data:[],
-                }]
-            }
+            
         }
     },
-    components:{
-        ECharts,
-    }
+    computed:{
+        ...mapState({
+            xAxis:state=>state.chart.xAxis,
+            chartOption1:state=>state.chart.chartOption1,
+            chartOption2:state=>state.chart.chartOption2,
+        }),
+        ...mapGetters([
+            'getChange'
+        ])
+    },
+    watch:{
+        // 更新dom
+        getChange:function(){
+            this.drawLine()
+        }
+    },
+    methods:{
+        drawLine(){
+            // 基于准备好的dom，初始化echarts实例
+            let tempChart=this.$refs.tempChart
+            let dfChart=this.$refs.dfChart
+            tempChart = echarts.init(tempChart)
+            dfChart = echarts.init(dfChart)
+            // 绘制图表
+            tempChart.setOption(this.chartOption1)
+            dfChart.setOption(this.chartOption2)
+        }
+    },
+    mounted(){
+        this.drawLine()
+    },
 }
 </script>
 
 <style>
-
+.chart .tempChart,
+.chart .dfChart{
+    width: 1000px;
+    height:400px;
+}
 </style>

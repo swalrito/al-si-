@@ -42,5 +42,11 @@ export default {
     width: 1400px;
     overflow: scroll;
     margin: auto;
+    border-left: 1px solid rgb(22, 134, 226);
+    border-right: 1px solid rgb(22, 134, 226);
+    border-bottom: 1px solid rgb(22, 134, 226);
+}
+.wrap .el-header{
+    padding: 0;
 }
 </style>

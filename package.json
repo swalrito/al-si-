@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "echarts": "^4.0.4",
     "element-ui": "^2.2.0",
     "vue": "^2.5.2",
     "vue-echarts": "^3.0.3",
