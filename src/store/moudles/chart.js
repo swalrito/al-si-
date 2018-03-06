@@ -144,7 +144,9 @@ let mutations = {
         state.chartOption2.xAxis[0].data=timeX
     },
     [types.SET_TEMP](state,{potential}){
-        let temp=[] //温度
+        // 清空之前的数据
+        state.temp=[]
+        let temp=state.temp //温度
         state.potential=potential
         potential.forEach(ele=>{
             // 电势转化为温度
