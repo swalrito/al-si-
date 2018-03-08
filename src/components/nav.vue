@@ -4,13 +4,12 @@
       <input type="file" class="fileEle" ref='file' @change="readFile">
       <el-button class="selectFile" type='info' round icon="el-icon-upload" @click="selectFile">选择文件</el-button>
       <!-- 显示数据 -->
-      <el-button class="showData" type="info" round icon="el-icon-document" @click=goData()>显示数据</el-button>
-      <!-- 查看微分曲线 -->
-      <el-button class="showDfChart" type='info' round icon="el-icon-tickets">微分曲线</el-button>
+      <el-button class="showData" type="info" round icon="el-icon-document" @click="goData">显示数据</el-button>
       <!-- 变质效果 -->
       <el-button class="showModifier" type="info" round icon="el-icon-info" @click='showResult'>变质效果</el-button>
       
       <!-- 显示变质效果弹框 -->
+      <el-button class="selectFile" type='info' round icon="el-icon-delete" @click="clearChart">清除数据</el-button>
       
   </div>
 </template>
@@ -35,11 +34,11 @@ export default {
             file.onload=function(){
                 // 将读取的string以回车符号分割成每一行数据，并存为数组
                 let data=file.result.split('\r')
-                vue.getXAxis(data)
+                vue.getData(data)
             }
             
         },
-        getXAxis(data){
+        getData(data){
             let xAxis=[] //横坐标时间
             let potential = [] //电势
             data.forEach(ele=>{
@@ -66,6 +65,12 @@ export default {
         showResult(){
             let boolean = true
             this.$store.commit('TRIGGLE_DIALOG',boolean)
+        },
+        showDfData(){
+            this.$store.commit('COMPUTE_DIFF')
+        },
+        clearChart(){
+
         }
     }
 }
