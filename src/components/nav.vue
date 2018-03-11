@@ -70,7 +70,7 @@ export default {
             this.$store.commit('COMPUTE_DIFF')
         },
         clearChart(){
-
+            this.$store.commit('CLEAR_DATA')
         }
     }
 }

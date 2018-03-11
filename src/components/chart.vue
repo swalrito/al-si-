@@ -1,7 +1,7 @@
 <template>
   <div class="chart">
       <!-- 曲线 -->
-      <div class="tempChart" ref='tempChart'></div>
+      <div class="myChart" ref='myChart'></div>
   </div>
 </template>
 
@@ -26,27 +26,28 @@ export default {
             chartOption:state=>state.chart.chartOption,
         }),
         ...mapGetters([
-            'getChange','getDfChange'
+            'getChange',
         ])
     },
     watch:{
         // 更新dom
-        getChange:function(){
-            this.drawLine()
+        getChange:{
+            handler:function(){
+            let newOption=this.chartOption
+            let myChart = echarts.getInstanceByDom(this.$refs.myChart)
+            let noMerge=true
+            myChart.setOption(newOption,noMerge)
         },
-        getDfChange:function(){
-            this.drawLine()
-        }
+        deep:true,
+        },
     },
     methods:{
         drawLine(){
-            // 移除实例
-            echarts.disconnect()
             // 基于准备好的dom，初始化echarts实例
-            let tempChart=this.$refs.tempChart
-            tempChart = echarts.init(tempChart)
+            let myChart=this.$refs.myChart
+            myChart = echarts.init(myChart)
             // 绘制图表
-            tempChart.setOption(this.chartOption)
+            myChart.setOption(this.chartOption)
         }
     },
     mounted(){
@@ -56,7 +57,7 @@ export default {
 </script>
 
 <style>
-.chart .tempChart,
+.chart .myChart,
 .chart .dfChart{
     width: 1000px;
     height:720px;

@@ -138,23 +138,17 @@ let mutations = {
         state.chartOption.series[state.chartIndex-2].data=temp
         state.chartOption.series[state.chartIndex-1].data=dfTemp
     },
-    [types.COMPUTE_DIFF](state){
-        // 数据清空
-        state.dfTemp=[]
-        let temp=state.temp //温度数据
-        let dfTemp=state.dfTemp //微分数值
-        for(let i = 0 ;i<temp.length;i++){
-            let df=(temp[i+80]-temp[i])/1
-            df=df.toFixed(2)
-            dfTemp.push(df)
-        }
-        state.chartOption.series[2].data=dfTemp
+    [types.CLEAR_DATA](state){
+        state.chartOption.xAxis[0].data=[]
+        state.chartOption.series=[]
+        state.chartOption.legend.data=[]
+        state.chartIndex=0
+        state.index=0
     }
 }
 
 let getters={
-    getChange:state=>state.chartOption.series,
-    getDfChange:state=>state.chartOption.series,
+    getChange:state=>state.chartOption,
 }
 
 export default {
