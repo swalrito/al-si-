@@ -5,7 +5,10 @@
         <el-breadcrumb-item>数据显示</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="data">
-        {{data}}
+        <div class="data-detail" v-for="item in data" :key="item.name">
+            <p>{{item.name}}:</p>
+            <p>{{item.data}}</p>
+        </div>
     </div>
   </div>
 </template>
@@ -20,7 +23,7 @@ export default {
     },
     computed:{
         ...mapState({
-            data:state=>state.chart.temp
+            data:state=>state.chart.dataTable
         })
     }
 }

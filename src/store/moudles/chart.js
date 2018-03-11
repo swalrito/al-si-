@@ -65,6 +65,8 @@ let state={
     index:0,
     // 曲线数量
     chartIndex:0,
+    // 数据表格
+    dataTable:[]
 }
 
 let mutations = {
@@ -121,6 +123,12 @@ let mutations = {
         let str2=`微分曲线${state.index}`
         state.chartOption.legend.data.push(str1)
         state.chartOption.legend.data.push(str2)
+        // 温度数据显示至dbTable组件中
+        let obj={
+            name:str1,
+            data:temp,
+        }
+        state.dataTable.push(obj)
         // Y轴数据
         let series1={
             type:'line',
@@ -144,6 +152,7 @@ let mutations = {
         state.chartOption.legend.data=[]
         state.chartIndex=0
         state.index=0
+        state.dataTable=[]
     }
 }
 
