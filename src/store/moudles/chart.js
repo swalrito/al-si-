@@ -35,7 +35,7 @@ let state={
         xAxis:[{
             type:'category',
             data:[],
-            name:'时间(ms)',
+            name:'时间(s)',
             axisLabel:{
                 interval:3119,
             },
@@ -66,7 +66,9 @@ let state={
     // 曲线数量
     chartIndex:0,
     // 数据表格
-    dataTable:[]
+    dataTable:[],
+    // chartOption变化次数
+    changeIndex:0,
 }
 
 let mutations = {
@@ -107,16 +109,64 @@ let mutations = {
         let dfTemp=state.dfTemp //微分数值
         state.potential=potential
         potential.forEach(ele=>{
+            // string转化为Number
+            ele=parseFloat(ele)
             // 电势转化为温度
             ele=0.0659+24.9829*ele-0.0365*ele*ele
             ele=ele.toFixed(2)
+            // string转化为Number
+            ele=parseFloat(ele)
             temp.push(ele)
         })
         // 求微分
         for(let i = 0 ;i<temp.length;i++){
             let df=(temp[i+80]-temp[i])/1
             df=df.toFixed(2)
+            df=parseFloat(df)
             dfTemp.push(df)
+        }
+        // 对微分进行滤波
+        let avDfTemps=[]
+        for(let i = 0;i<dfTemp.length;i++){
+            if(i>=4){
+                let avDfTemp=(dfTemp[i-4]+dfTemp[i-3]+dfTemp[i-2]+dfTemp[i-1]+dfTemp[i]+dfTemp[i+1]+dfTemp[i+2]+dfTemp[i+3]+dfTemp[i+4])/9
+                avDfTemp=avDfTemp.toFixed(2)
+                avDfTemp=parseFloat(avDfTemp)
+                avDfTemps.push(avDfTemp)
+            }
+            else{
+                switch (i) {
+                    case 0:{
+                    let avDfTemp=dfTemp[i]
+                    avDfTemp=avDfTemp.toFixed(2)
+                    avDfTemp=parseFloat(avDfTemp)
+                    avDfTemps.push(avDfTemp)
+                        break;
+                    }
+                    case 1:{
+                    let avDfTemp=(dfTemp[i-1]+dfTemp[i]+dfTemp[i+1])/3
+                    avDfTemp=avDfTemp.toFixed(2)
+                    avDfTemp=parseFloat(avDfTemp)
+                    avDfTemps.push(avDfTemp)
+                        break;
+                    }
+                    case 2:{
+                    let avDfTemp=(dfTemp[i-2]+dfTemp[i-1]+dfTemp[i]+dfTemp[i+1]+dfTemp[i+2])/5
+                    avDfTemp=avDfTemp.toFixed(2)
+                    avDfTemp=parseFloat(avDfTemp)
+                    avDfTemps.push(avDfTemp)
+                        break;
+                    }
+                    case 3:{
+                    let avDfTemp=(dfTemp[i-3]+dfTemp[i-2]+dfTemp[i-1]+dfTemp[i]+dfTemp[i+1]+dfTemp[i+2]+dfTemp[i+3])/7
+                    avDfTemp=avDfTemp.toFixed(2)
+                    avDfTemp=parseFloat(avDfTemp)
+                    avDfTemps.push(avDfTemp)
+                            break;
+                    }
+                }
+            }
+            this.dfTemp=avDfTemps
         }
         // 增加legend
         let str1=`温度曲线${state.index}`
@@ -145,6 +195,8 @@ let mutations = {
         state.chartOption.series.push(series2)
         state.chartOption.series[state.chartIndex-2].data=temp
         state.chartOption.series[state.chartIndex-1].data=dfTemp
+        // 表示chartOption变化完成，便于getters识别
+        state.changeIndex++
     },
     [types.CLEAR_DATA](state){
         state.chartOption.xAxis[0].data=[]
@@ -153,11 +205,12 @@ let mutations = {
         state.chartIndex=0
         state.index=0
         state.dataTable=[]
+        state.changeIndex++
     }
 }
 
 let getters={
-    getChange:state=>state.chartOption,
+    getChange:state=>state.changeIndex,
 }
 
 export default {
