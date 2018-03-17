@@ -80,11 +80,12 @@ export default {
 .nav{
     padding-top: 20px;
 }
+.nav .el-button+.el-button{
+    margin-left: 88.5px;
+}
 .nav .el-button{
     display: block;
-    margin-top: 20px;
-    margin-left: 120px;
-    margin-bottom: 20px;
+    margin: 20px auto 20px auto;
 }
 .nav .fileEle{
     display: none;
