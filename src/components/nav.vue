@@ -80,6 +80,9 @@ export default {
 .nav{
     padding-top: 20px;
 }
+.nav .el-button+.el-button{
+    margin-left: 0;
+}
 .nav .el-button{
     display: block;
     margin: 20px auto 20px auto;
